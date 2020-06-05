@@ -19,18 +19,22 @@ const extension: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd, mainmenu: IMainMenu) => {
     let {commands} = app;
     const menu = new Menu({ commands });
-    commands.addCommand('run-tag-cells', {
-      label: 'Run tag A',
-      execute: (args) => {
-        console.error('This is the arguments I am getting');
-        console.error(JSON.stringify(args));
-        console.error('Run tag A executed');
-      }
-    });
+    function runTagCells(args: any) {
+      console.error(`Run cells with tag ${args['tag']}`);
+    }
+
     menu.title.label = 'Run Tagged Cells';
-    menu.addItem({
-      command: 'run-tag-cells'
-    });
+    const tags = ['a', 'b', 'c'];
+    tags.forEach((tag: string) => {
+      commands.addCommand(`run-tag-cells-${tag}`, {
+        label: `Run Cell with Tag '${tag}'`,
+        execute: runTagCells
+      });
+      menu.addItem({
+        command: `run-tag-cells-${tag}`,
+        args: {tag}
+      });
+    });    
     mainmenu.addMenu(menu, { rank: 60 }); 
   }
 };
