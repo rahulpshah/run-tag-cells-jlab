@@ -2,8 +2,7 @@
 
 ![Github Actions Status](https://github.com/rahulpshah/run-tag-cells-jlab/workflows/Build/badge.svg)
 
-Run cells belonging to for certain tags
-
+Run and given cells with a given tag.
 
 
 ## Requirements
