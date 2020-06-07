@@ -47,15 +47,26 @@ const extension: JupyterFrontEndPlugin<void> = {
       const notebook = tracker.currentWidget;
       // If notebook is added
       if(notebook) {
-        const cells = notebook.content.model.cells;
+        notebook.model.contentChanged.connect((sender) => {
+        const cells = sender.cells;
         let tags: string[] = [];
-        for(let i = 0; i <= cells.length; i += 1) {
+        var set = new Set<string>();
+        for(let i = 0; cells && i <= cells.length; i += 1) {
           const cell = cells.get(i);
           if(cell) {
-            tags = tags.concat(cell.metadata.keys());
+              let currentTags = cell.metadata.get('tags');
+              if(currentTags) {
+                for(let e of currentTags.toString().split(',')) {
+                  set.add(e);
+                }
+              }
           }
         }
+        for(let ele of set) {
+          tags.push(ele);
+        }
         updateMenu(menu, tags);
+        });
       }
     });
   }
