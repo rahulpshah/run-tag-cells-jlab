@@ -1,9 +1,8 @@
 # run-tag-cells-jlab
 
-![Github Actions Status](https://github.com/rahulpshah/run-tag-cells-jlab/workflows/Build/badge.svg)
+![Github Actions Status](rahulpshah/run-tag-cells-jlab/workflows/Build/badge.svg)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rahulpshah/run-tag-cells-jlab/master?urlpath=lab)
 
 Run cells belonging to for certain tags
-
 
 
 ## Requirements
