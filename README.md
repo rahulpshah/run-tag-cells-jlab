@@ -1,6 +1,6 @@
 # run-tag-cells-jlab
 
-![Github Actions Status](rahulpshah/run-tag-cells-jlab/workflows/Build/badge.svg)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rahulpshah/run-tag-cells-jlab/master?urlpath=lab)
+![Github Actions Status](rahulpshah/run-tag-cells-jlab/workflows/Build/badge.svg)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rahulpshah/run-tags-cells-jlab/master?urlpath=lab)
 
 Run and given cells with a given tag.
 
