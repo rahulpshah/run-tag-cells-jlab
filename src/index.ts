@@ -3,7 +3,7 @@ import {
   JupyterFrontEndPlugin,
 } from '@jupyterlab/application';
 
-import { INotebookTracker } from '@jupyterlab/notebook';
+import { NotebookActions, INotebookTracker } from '@jupyterlab/notebook';
 
 import { IMainMenu 
 } from '@jupyterlab/mainmenu'
@@ -19,7 +19,23 @@ const extension: JupyterFrontEndPlugin<void> = {
   requires: [IMainMenu, INotebookTracker],
   activate: (app: JupyterFrontEnd, mainmenu: IMainMenu, tracker: INotebookTracker) => {
     function runTagCells(args: any) {
-      console.log(`Run cells with tag ${args['tag']}`);
+      const tag = args['tag'];
+      console.log(`Running cells with tag ${tag}`);
+      const panel = tracker.currentWidget;
+      const notebook = panel.content;
+      notebook.widgets.forEach((child, index) => {
+        console.log(`Cell Index: ${index}`);
+        let cellTags = child.model.metadata.get('tags') || [];
+        cellTags = cellTags.toString().split(',');
+        if(cellTags.indexOf(tag) !== -1) {
+          console.log("selecting cell with content");
+          console.log(child.model.value);
+          notebook.select(child);
+        }
+      });
+      const { context, content } = panel;
+      return NotebookActions.runAndAdvance(content, context.sessionContext);
+      
     }
 
     function updateMenu(menu: Menu, tags: string[]) {
