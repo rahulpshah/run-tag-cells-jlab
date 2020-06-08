@@ -34,7 +34,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         }
       });
       const { context, content } = panel;
-      return NotebookActions.runAndAdvance(content, context.sessionContext);
+      return NotebookActions.run(content, context.sessionContext);
       
     }
 
