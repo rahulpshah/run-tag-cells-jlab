@@ -23,6 +23,8 @@ const extension: JupyterFrontEndPlugin<void> = {
       console.log(`Running cells with tag ${tag}`);
       const panel = tracker.currentWidget;
       const notebook = panel.content;
+      let prevIndex = notebook.activeCellIndex;
+
       notebook.widgets.forEach((child, index) => {
         console.log(`Cell Index: ${index}`);
         let cellTags = child.model.metadata.get('tags') || [];
@@ -31,10 +33,15 @@ const extension: JupyterFrontEndPlugin<void> = {
           console.log("selecting cell with content");
           console.log(child.model.value);
           notebook.select(child);
+          notebook.activeCellIndex = index;
         }
       });
       const { context, content } = panel;
-      return NotebookActions.run(content, context.sessionContext);
+      
+      return NotebookActions.run(content, context.sessionContext)
+        .then(() => {
+          notebook.activeCellIndex = prevIndex;
+        })
       
     }
 
@@ -64,24 +71,24 @@ const extension: JupyterFrontEndPlugin<void> = {
       // If notebook is added
       if(notebook) {
         notebook.model.contentChanged.connect((sender) => {
-        const cells = sender.cells;
-        let tags: string[] = [];
-        var set = new Set<string>();
-        for(let i = 0; cells && i <= cells.length; i += 1) {
-          const cell = cells.get(i);
-          if(cell) {
-              let currentTags = cell.metadata.get('tags');
-              if(currentTags) {
-                for(let e of currentTags.toString().split(',')) {
-                  set.add(e);
+          const cells = sender.cells;
+          let tags: string[] = [];
+          var set = new Set<string>();
+          for(let i = 0; cells && i <= cells.length; i += 1) {
+            const cell = cells.get(i);
+            if(cell) {
+                let currentTags = cell.metadata.get('tags');
+                if(currentTags) {
+                  for(let e of currentTags.toString().split(',')) {
+                    set.add(e);
+                  }
                 }
-              }
+            }
           }
-        }
-        for(let ele of set) {
-          tags.push(ele);
-        }
-        updateMenu(menu, tags);
+          for(let ele of set) {
+            tags.push(ele);
+          }
+          updateMenu(menu, tags);
         });
       }
     });
