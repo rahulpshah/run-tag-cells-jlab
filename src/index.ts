@@ -9,6 +9,8 @@ import { IMainMenu
 } from '@jupyterlab/mainmenu'
 import { Menu } from '@lumino/widgets';
 import { CommandRegistry } from '@lumino/commands';
+import {RunTagCellWidget} from './run-tag-widget';
+import { getTags } from './util';
 
 /**
  * Initialization data for the run-tag-cells-jlab extension.
@@ -64,31 +66,17 @@ const extension: JupyterFrontEndPlugin<void> = {
     const commands: CommandRegistry = new CommandRegistry();
     const menu = new Menu({ commands });
     menu.title.label = 'Run Tagged Cells';
-    mainmenu.addMenu(menu, { rank: 60 }); 
+    mainmenu.addMenu(menu, { rank: 60 });
 
     tracker.currentChanged.connect((sender, args) => {
       const notebook = tracker.currentWidget;
+
       // If notebook is added
       if(notebook) {
+        const tagWidget = new RunTagCellWidget(notebook.model);
+        notebook.toolbar.addItem('run-tag-cells', tagWidget);
         notebook.model.contentChanged.connect((sender) => {
-          const cells = sender.cells;
-          let tags: string[] = [];
-          var set = new Set<string>();
-          for(let i = 0; cells && i <= cells.length; i += 1) {
-            const cell = cells.get(i);
-            if(cell) {
-                let currentTags = cell.metadata.get('tags');
-                if(currentTags) {
-                  for(let e of currentTags.toString().split(',')) {
-                    set.add(e);
-                  }
-                }
-            }
-          }
-          for(let ele of set) {
-            tags.push(ele);
-          }
-          updateMenu(menu, tags);
+          updateMenu(menu, getTags(sender));
         });
       }
     });
