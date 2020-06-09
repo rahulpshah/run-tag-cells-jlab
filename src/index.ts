@@ -12,6 +12,11 @@ import { CommandRegistry } from '@lumino/commands';
 import {RunTagCellWidget} from './run-tag-widget';
 import { getTags } from './util';
 
+import {
+  ToolbarButton
+} from '@jupyterlab/apputils';
+
+
 /**
  * Initialization data for the run-tag-cells-jlab extension.
  */
@@ -74,7 +79,19 @@ const extension: JupyterFrontEndPlugin<void> = {
       // If notebook is added
       if(notebook) {
         const tagWidget = new RunTagCellWidget(notebook.model);
-        notebook.toolbar.addItem('run-tag-cells', tagWidget);
+        notebook.toolbar.insertItem(10, 'select-tag-cells', tagWidget);
+        let button = new ToolbarButton({
+          className: 'runAllCellsButton',
+          label: 'Run Tag Cells',
+          onClick: () => {
+            let selectOption = tagWidget.node.getElementsByTagName('select')[0];
+            let currentTag = selectOption.options[selectOption.selectedIndex].value;
+            console.error(`Current tag is ${currentTag}`);
+            return runTagCells({tag: currentTag});
+          },
+          tooltip: 'Run Tag Cells'
+        });
+        notebook.toolbar.insertItem(11, 'run-tag-cells', button);
         notebook.model.contentChanged.connect((sender) => {
           updateMenu(menu, getTags(sender));
         });

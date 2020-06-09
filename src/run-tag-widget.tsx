@@ -4,7 +4,7 @@ import React from 'react';
 import { INotebookModel } from '@jupyterlab/notebook';
 import {getTags} from './util';
 
-
+// import {Button} from '@jupyterlab/ui-components'
 export interface IRunTagState {
   tags: string[]
 }
@@ -28,9 +28,7 @@ class RunTagCell extends React.Component<IRunTagProps, IRunTagState> {
         tagOptions.push(<option key={i} value={this.state.tags[i]}>{this.state.tags[i]}</option>);
     }
     return (
-      <div>
         <select>{tagOptions}</select>
-      </div>
     );
   }
 
@@ -53,6 +51,8 @@ export class RunTagCellWidget extends ReactWidget {
     super();
     this._model = model;
     this.addClass('jp-Notebook-toolbarCellType');
+    this.addClass('jp-Notebook-toolbarCellTypeDropdown');
+    this.addClass('jp-HTMLSelect');
     this.addClass('jp-ReactWidget');
   }
   render(): JSX.Element {
