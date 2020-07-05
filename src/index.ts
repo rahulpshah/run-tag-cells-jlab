@@ -5,12 +5,7 @@ import {
 
 import { NotebookActions, INotebookTracker } from '@jupyterlab/notebook';
 
-import { IMainMenu 
-} from '@jupyterlab/mainmenu'
-import { Menu } from '@lumino/widgets';
-import { CommandRegistry } from '@lumino/commands';
 import {RunTagCellWidget} from './run-tag-widget';
-import { getTags } from './util';
 
 import {
   ToolbarButton
@@ -23,8 +18,8 @@ import {
 const extension: JupyterFrontEndPlugin<void> = {
   id: 'run-tag-cells-jlab',
   autoStart: true,
-  requires: [IMainMenu, INotebookTracker],
-  activate: (app: JupyterFrontEnd, mainmenu: IMainMenu, tracker: INotebookTracker) => {
+  requires: [INotebookTracker],
+  activate: (app: JupyterFrontEnd, tracker: INotebookTracker) => {
     function runTagCells(args: any) {
       const tag = args['tag'];
       const panel = tracker.currentWidget;
@@ -47,28 +42,8 @@ const extension: JupyterFrontEndPlugin<void> = {
         })
       
     }
-
-    function updateMenu(menu: Menu, tags: string[]) {
-      menu.clearItems();
-      tags.forEach((tag: string) => {
-        if(!menu.commands.hasCommand(`run-tag-cells-${tag}`)) {
-          menu.commands.addCommand(`run-tag-cells-${tag}`, {
-            label: `Run Cell with Tag '${tag}'`,
-            execute: runTagCells
-          });
-        }
-        menu.addItem({
-          command: `run-tag-cells-${tag}`,
-          args: {tag}
-        });
-      });
-    }
-    const commands: CommandRegistry = new CommandRegistry();
-    const menu = new Menu({ commands });
-    menu.title.label = 'Run Tagged Cells';
-    mainmenu.addMenu(menu, { rank: 60 });
-
-    tracker.currentChanged.connect((sender, args) => {
+    
+    tracker.currentChanged.connect(() => {
       const notebook = tracker.currentWidget;
 
       // If notebook is added
@@ -86,9 +61,6 @@ const extension: JupyterFrontEndPlugin<void> = {
           tooltip: 'Run Tag Cells'
         });
         notebook.toolbar.insertItem(11, 'run-tag-cells', button);
-        notebook.model.contentChanged.connect((sender) => {
-          updateMenu(menu, getTags(sender));
-        });
       }
     });
   }
