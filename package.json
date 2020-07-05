@@ -1,7 +1,7 @@
 {
   "name": "run-tag-cells-jlab",
   "version": "0.1.0",
-  "description": "Run cells belonging to for certain tags",
+  "description": "Run cells belonging to certain tags",
   "keywords": [
     "jupyter",
     "jupyterlab",
