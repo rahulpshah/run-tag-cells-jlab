@@ -8,6 +8,11 @@ Run and given cells with a given tag.
 
 * JupyterLab >= 2.0
 
+## Demo
+
+![Demo](demo.gif)
+
+
 ## Install
 
 ```bash
