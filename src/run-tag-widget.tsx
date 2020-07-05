@@ -35,7 +35,11 @@ class RunTagCell extends React.Component<IRunTagProps, IRunTagState> {
   componentDidMount() {
     const { model } = this.props;
     model.contentChanged.connect((sender, args) => {
-      this.setState({tags: getTags(sender)})
+      let notebookTags = getTags(sender);
+      if(notebookTags.length === 0) {
+        notebookTags = ['no tags']
+      }
+      this.setState({tags: notebookTags})
     });
   }
 };
