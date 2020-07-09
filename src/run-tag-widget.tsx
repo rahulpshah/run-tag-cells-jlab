@@ -2,15 +2,15 @@ import { ReactWidget } from '@jupyterlab/apputils';
 
 import React from 'react';
 import { INotebookModel } from '@jupyterlab/notebook';
-import {getTags} from './util';
+import { getTags } from './util';
 
 // import {Button} from '@jupyterlab/ui-components'
 export interface IRunTagState {
-  tags: string[]
+  tags: string[];
 }
 
 export interface IRunTagProps {
-  model: INotebookModel
+  model: INotebookModel;
 }
 /**
  * React component for a counter.
@@ -20,29 +20,31 @@ export interface IRunTagProps {
 class RunTagCell extends React.Component<IRunTagProps, IRunTagState> {
   constructor(props: IRunTagProps) {
     super(props);
-    this.state = {tags: ['no tags']};
+    this.state = { tags: ['no tags'] };
   }
   render() {
     const tagOptions = [];
-    for (var i = 0; i < this.state.tags.length; i++) {
-        tagOptions.push(<option key={i} value={this.state.tags[i]}>{this.state.tags[i]}</option>);
+    for (let i = 0; i < this.state.tags.length; i++) {
+      tagOptions.push(
+        <option key={i} value={this.state.tags[i]}>
+          {this.state.tags[i]}
+        </option>
+      );
     }
-    return (
-        <select>{tagOptions}</select>
-    );
+    return <select>{tagOptions}</select>;
   }
 
   componentDidMount() {
     const { model } = this.props;
     model.contentChanged.connect((sender, args) => {
       let notebookTags = getTags(sender);
-      if(notebookTags.length === 0) {
-        notebookTags = ['no tags']
+      if (notebookTags.length === 0) {
+        notebookTags = ['no tags'];
       }
-      this.setState({tags: notebookTags})
+      this.setState({ tags: notebookTags });
     });
   }
-};
+}
 /**
  * A RunTagCell Lumino Widget that wraps a RunTagCellComponent.
  */
